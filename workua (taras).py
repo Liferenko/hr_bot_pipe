@@ -74,7 +74,7 @@ def analyze_page(url):
     return resume_links
     print('Done')
 
-def geting_data(url):
+def getting_data(url):
     print('Start working. Wait for result:')
     chrome_path = "chromedriver.exe"
     login_url = "https://www.work.ua/employer/login/"
@@ -140,5 +140,5 @@ if __name__ == '__main__':
         sys.exit()
     print(url)
     print('Total resume urls:{}'.format(len(url)))
-    geting_data(url)
+    getting_data(url)
     
