@@ -20,19 +20,12 @@ def create_new_person_plus_deal():
     }, method='POST')
 
     pipedrive.deals({
-        "id": 45,
-        "order_nr": 1,
-        "name": "Новые люди с work.ua",
-
-        "deal_probability": 100,
-        "pipeline_id": 11,
-        "pipeline_name": "HR_bot: Новые люди",
-
+        'stage_id': 45,
         'title': lead_name + '|' + lead_phone,
-        'value': 1000000,
+        'value': 1200000,
         'org_id': 327,
         'status': 'open'
-    }, method='GET')
+    }, method='POST')
     print('New deal was created')
 
 create_new_person_plus_deal()
