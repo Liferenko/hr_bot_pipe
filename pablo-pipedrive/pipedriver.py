@@ -17,6 +17,7 @@ def create_new_person_plus_deal(lead_name, lead_phone, lead_email):
         'phone': lead_phone,
         '1abdf0adad500f25d3375c625bcc2532c29980cd': 'найден hr_ботом на work.ua'
     }, method='POST')
+    print('New person was created')
 
     pipedrive.deals({
         'stage_id': 45,
@@ -26,5 +27,3 @@ def create_new_person_plus_deal(lead_name, lead_phone, lead_email):
         'status': 'open'
     }, method='POST')
     print('New deal was created')
-
-create_new_person_plus_deal('lead_Pablo', '067 907', 'test@test.com')

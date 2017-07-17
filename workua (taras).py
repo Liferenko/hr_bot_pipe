@@ -8,6 +8,10 @@ from fake_useragent import UserAgent
 import traceback
 ua=UserAgent(verify_ssl=False)
 
+from pipedrive import Pipedrive
+
+USERNAME = 'office@skills.events'
+PASSWORD = 'TookieTookie'
 # from urllib.request import urlretrieve
 
 os.system("chcp 65001")
@@ -74,6 +78,12 @@ def analyze_page(url):
     return resume_links
     print('Done')
 
+
+
+pipedrive = Pipedrive(USERNAME, PASSWORD)
+print('Pipedrive Login succeed. Keep going')
+
+
 def getting_data(url):
     print('Start working. Wait for result:')
     chrome_path = "chromedriver.exe"
@@ -106,20 +116,41 @@ def getting_data(url):
             contact_a.click()
             time.sleep(0.3)
 
-            name = browser.find_element_by_css_selector("h1.cut-top").text
-            print(name)
+            lead_name = browser.find_element_by_css_selector("h1.cut-top").text
+            print(lead_name)
 
             contact_info = browser.find_elements_by_css_selector("dl.dl-horizontal")[1]
             tmp = contact_info.find_elements_by_css_selector("dd")
-            phone = tmp[0].text
-            email = tmp[1].text
+            lead_phone = tmp[0].text
+            lead_email = tmp[1].text
 
             download = browser.find_element_by_css_selector("a.download-resume")
             download.click()
 
-            print(phone)
-            print(email)
+            print(lead_phone)
+            print(lead_email)
             number_of_url_element += 1
+
+            def create_new_person_plus_deal(lead_name, lead_phone, lead_email):
+                pipedrive.persons({
+                    'name': lead_name,
+                    'org_id': 327,
+                    'email': lead_email,
+                    'phone': lead_phone,
+                    '1abdf0adad500f25d3375c625bcc2532c29980cd': 'найден hr_ботом на work.ua'
+                }, method='POST')
+                print('New person was created')
+
+                pipedrive.deals({
+                    'stage_id': 45,
+                    'title': lead_name + '|' + lead_phone,
+                    'value': 1200000,
+                    'org_id': 327,
+                    'status': 'open'
+                }, method='POST')
+                print('New deal was created')
+            create_new_person_plus_deal(lead_name, lead_phone, lead_email)
+
         except:
             print("Skip this person (already exist). Go next...")
             number_of_url_element += 1
