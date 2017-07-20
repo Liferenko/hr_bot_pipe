@@ -11,8 +11,6 @@ ua=UserAgent(verify_ssl=False)
 from pipedrive import Pipedrive
 
 
-USERNAME = input('Input accout email')
-PASSWORD = input('Input accout password')
 # from urllib.request import urlretrieve
 
 os.system("chcp 65001")
@@ -27,7 +25,7 @@ def sending_requests(link):
     print('send request to site for handshake. Please wait...')
     headers = HEADERS.copy()
     idx = 0
-    while idx < 9:
+    while idx < 100:
         time.sleep(1.5)
         headers['User-Agent'] = ua.random
         try:
@@ -39,8 +37,8 @@ def sending_requests(link):
                 print('Success! {}'.format(link))
                 return r.text
         except:
-            idx += 1
-        idx+=1
+            idx += 100
+        idx+=100
     else:
         traceback.print_exc()
         return False
@@ -52,7 +50,7 @@ def analyze_page(url):
     if not url.endswith('/'):
         url = url + '/'
     while True:
-        current_url = url + '/page/' + str(idx_page)
+        current_url = url + 'page/' + str(idx_page)
         page_content = sending_requests(current_url)
         if not page_content:
             err.write('current_url'+'\n')
@@ -62,18 +60,18 @@ def analyze_page(url):
                 break
             continue
         source = BeautifulSoup(page_content, 'lxml')
-        cards = source.findAll('div',{'class':'list_rezume'})
+        cards = source.findAll('#content > div',{'class':'search_rezume'})
         if not cards:
             break
         for card in cards:
-            link = [a['href'] for a in card.findAll('a',{'href':True}) if 'id_rezume' in a['href']]
+            link = [a['href'] for a in card.find_element_by_css_selector('#content > div.search_rezume > div > table > tbody')]
             if not link:
                 continue
             link = link[0]
             if not link.startswith('http://novarobota.ua/ru'):
                 link = 'http://novarobota.ua/ru' + link
             resume_links.append(link)
-        idx_page += 1
+        idx_page += 100
         if TEST_END_PAGE and idx_page == TEST_END_PAGE:
             break
     return resume_links
@@ -81,8 +79,7 @@ def analyze_page(url):
 
 
 
-pipedrive = Pipedrive(USERNAME, PASSWORD)
-print('Pipedrive Login succeed. Keep going')
+
 
 
 def getting_data(url):
@@ -127,13 +124,18 @@ def getting_data(url):
             print(lead_experience)
             number_of_url_element += 1
 
+            USERNAME = input('Input Pipedrive email -  ')
+            PASSWORD = input('Input Pipedrive password -  ')
+            pipedrive = Pipedrive(USERNAME, PASSWORD)
+            print('Pipedrive Login succeed. Keep going')
+
             def create_new_person_plus_deal(lead_name, lead_phone, lead_email, lead_experience):
                 pipedrive.persons({
                     'name': lead_name,
                     'org_id': 328,
                     'email': lead_email,
                     'phone': lead_phone,
-                    '1abdf0adad500f25d3375c625bcc2532c29980cd': 'найден hr_ботом на novarobota.ua',
+                    '1abdf0adad500f25d3375c625bcc2532c29980cd': 'найден hr_ботом на novarabota.ua',
                     '8ca5d49583eb54c4d3031ee2fce864f24dba111a': lead_experience
                 }, method='POST')
                 print('New person was created')
@@ -158,7 +160,7 @@ def getting_data(url):
 
 
 if __name__ == '__main__':
-    TEST_END_PAGE = 2
+    TEST_END_PAGE = 200
     err = open('err_log.txt','a')
     main_url_to_scrap_urls = 'http://novarobota.ua/ru/rezultaty_poiska_rezyume'
     #url = ['https://www.work.ua/resumes/1221010/', ]

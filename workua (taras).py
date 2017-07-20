@@ -10,8 +10,10 @@ ua=UserAgent(verify_ssl=False)
 
 from pipedrive import Pipedrive
 
-USERNAME = 'office@skills.events'
-PASSWORD = 'TookieTookie'
+
+
+USERNAME = input('Input accout email')
+PASSWORD = input('Input accout password')
 # from urllib.request import urlretrieve
 
 os.system("chcp 65001")
@@ -144,7 +146,7 @@ def getting_data(url):
                 pipedrive.deals({
                     'stage_id': 45,
                     'title': lead_name + '|' + lead_phone,
-                    'value': 1200000,
+                    'value': 0,
                     'org_id': 327,
                     'status': 'open'
                 }, method='POST')
