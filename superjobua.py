@@ -84,7 +84,6 @@ def analyze_page(url):
 pipedrive = Pipedrive(USERNAME, PASSWORD)
 print('Pipedrive Login succeed. Keep going')
 
-
 def getting_data(url):
     print('Start working. Wait for result:')
     chrome_path = "chromedriver.exe"
